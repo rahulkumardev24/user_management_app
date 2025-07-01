@@ -44,7 +44,7 @@ class UserDetailScreen extends StatelessWidget {
                       child: Text(
                         user.name[0],
                         style: TextStyle(
-                          fontSize: 36,
+                           fontSize: 36,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
@@ -101,6 +101,7 @@ class UserDetailScreen extends StatelessWidget {
           ),
         ],
       ),
+
       /// copy button
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.secondary,
@@ -115,7 +116,7 @@ class UserDetailScreen extends StatelessWidget {
             ),
           );
         },
-        child: const Icon(Icons.copy , color: Colors.white, ),
+        child: const Icon(Icons.copy, color: Colors.white),
       ),
     );
   }
@@ -126,9 +127,8 @@ class UserDetailScreen extends StatelessWidget {
     List<Widget> children,
   ) {
     return Card(
-      elevation: 1,surfaceTintColor: AppColors.light,
-
-
+      elevation: 1,
+      surfaceTintColor: AppColors.light,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -137,7 +137,11 @@ class UserDetailScreen extends StatelessWidget {
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 21 ,fontWeight: FontWeight.bold , color: AppColors.secondary),
+              style: TextStyle(
+                fontSize: 21,
+                fontWeight: FontWeight.bold,
+                color: AppColors.secondary,
+              ),
             ),
             const SizedBox(height: 8),
             ...children,
@@ -153,7 +157,7 @@ class UserDetailScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20 , color: AppColors.primary,),
+          Icon(icon, size: 20, color: AppColors.primary),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
