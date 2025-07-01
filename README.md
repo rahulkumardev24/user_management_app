@@ -3,7 +3,6 @@
 
 <h2>Mobile UI </h2>
 <div> 
-  https://github.com/rahulkumardev24/user_management_app/blob/main/splash_screen.png
 <img src = "  https://github.com/rahulkumardev24/user_management_app/blob/main/splash_screen.png " height = 600 />
 <img src = "https://github.com/rahulkumardev24/user_management_app/blob/main/home_screen.png " height = 600 />
 <img src = "https://github.com/rahulkumardev24/user_management_app/blob/main/user_details_screen.png " height = 600 />
