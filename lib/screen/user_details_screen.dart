@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../helper/color.dart';
 import '../model/user.dart';
 
 class UserDetailScreen extends StatelessWidget {
@@ -10,40 +14,24 @@ class UserDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 200,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                user.name,
-                style: TextStyle(
-                  color: theme.colorScheme.onPrimary,
-                  shadows: isDark
-                      ? [
-                    Shadow(
-                      offset: const Offset(1, 1),
-                      blurRadius: 10,
-                      color: Colors.black.withOpacity(0.8),
-                    )
-                  ]
-                      : null,
-                ),
-              ),
+              centerTitle: true,
+              title: Text(user.name, style: TextStyle(fontSize: 24)),
               background: Hero(
                 tag: 'user-${user.id}',
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        theme.colorScheme.primary,
-                        theme.colorScheme.primaryContainer,
+                        AppColors.primary.withValues(alpha: 0.5),
+                        AppColors.light.withValues(alpha: 0.1),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -51,14 +39,14 @@ class UserDetailScreen extends StatelessWidget {
                   ),
                   child: Center(
                     child: CircleAvatar(
+                      backgroundColor: AppColors.primary,
                       radius: 40,
-                      backgroundColor: theme.colorScheme.onPrimary,
                       child: Text(
                         user.name[0],
                         style: TextStyle(
                           fontSize: 36,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
                         ),
                       ),
                     ),
@@ -73,43 +61,50 @@ class UserDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildInfoCard(
-                    context,
-                    'Contact Info',
-                    [
-                      _buildInfoItem(Icons.email, 'Email', user.email),
-                      _buildInfoItem(Icons.phone, 'Phone', user.phone),
-                      _buildInfoItem(Icons.language, 'Website', user.website),
-                    ],
-                  ),
+                  _buildInfoCard(context, 'Contact Info', [
+                    _buildInfoItem(Icons.email, 'Email', user.email),
+                    _buildInfoItem(Icons.phone, 'Phone', user.phone),
+                    _buildInfoItem(Icons.language, 'Website', user.website),
+                  ]),
                   const SizedBox(height: 16),
-                  _buildInfoCard(
-                    context,
-                    'Address',
-                    [
-                      _buildInfoItem(Icons.home, 'Street', user.address.street),
-                      _buildInfoItem(Icons.home_work, 'Suite', user.address.suite),
-                      _buildInfoItem(Icons.location_city, 'City', user.address.city),
-                      _buildInfoItem(Icons.local_post_office, 'Zipcode', user.address.zipcode),
-                    ],
-                  ),
+                  _buildInfoCard(context, 'Address', [
+                    _buildInfoItem(Icons.home, 'Street', user.address.street),
+                    _buildInfoItem(
+                      Icons.home_work,
+                      'Suite',
+                      user.address.suite,
+                    ),
+                    _buildInfoItem(
+                      Icons.location_city,
+                      'City',
+                      user.address.city,
+                    ),
+                    _buildInfoItem(
+                      Icons.local_post_office,
+                      'Zipcode',
+                      user.address.zipcode,
+                    ),
+                  ]),
                   const SizedBox(height: 16),
-                  _buildInfoCard(
-                    context,
-                    'Company',
-                    [
-                      _buildInfoItem(Icons.business, 'Name', user.company.name),
-                      _buildInfoItem(Icons.format_quote, 'Catch Phrase', user.company.catchPhrase),
-                      _buildInfoItem(Icons.work, 'BS', user.company.bs),
-                    ],
-                  ),
+                  _buildInfoCard(context, 'Company', [
+                    _buildInfoItem(Icons.business, 'Name', user.company.name),
+                    _buildInfoItem(
+                      Icons.format_quote,
+                      'Catch Phrase',
+                      user.company.catchPhrase,
+                    ),
+                    _buildInfoItem(Icons.work, 'BS', user.company.bs),
+                  ]),
                 ],
               ),
             ),
           ),
         ],
       ),
+      /// copy button
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.secondary,
+        elevation: 2,
         onPressed: () {
           HapticFeedback.lightImpact();
           Clipboard.setData(ClipboardData(text: user.email));
@@ -120,17 +115,21 @@ class UserDetailScreen extends StatelessWidget {
             ),
           );
         },
-        child: const Icon(Icons.copy),
+        child: const Icon(Icons.copy , color: Colors.white, ),
       ),
     );
   }
 
-  Widget _buildInfoCard(BuildContext context, String title, List<Widget> children) {
+  Widget _buildInfoCard(
+    BuildContext context,
+    String title,
+    List<Widget> children,
+  ) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      elevation: 1,surfaceTintColor: AppColors.light,
+
+
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -138,9 +137,7 @@ class UserDetailScreen extends StatelessWidget {
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 21 ,fontWeight: FontWeight.bold , color: AppColors.secondary),
             ),
             const SizedBox(height: 8),
             ...children,
@@ -156,7 +153,7 @@ class UserDetailScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20),
+          Icon(icon, size: 20 , color: AppColors.primary,),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -170,10 +167,7 @@ class UserDetailScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 2),
-                Text(
-                  value,
-                  style: const TextStyle(fontSize: 16),
-                ),
+                Text(value, style: const TextStyle(fontSize: 16)),
               ],
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../helper/color.dart';
 import '../model/user.dart';
 
 class UserGridItem extends StatelessWidget {
@@ -10,13 +11,10 @@ class UserGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      elevation: 0,
+      color: AppColors.light.withValues(alpha: 0.2),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: onTap,
@@ -28,13 +26,13 @@ class UserGridItem extends StatelessWidget {
               Hero(
                 tag: 'user-${user.id}',
                 child: Container(
-                  width: 70,
-                  height: 70,
+                  width: 100,
+                  height: 100,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        theme.colorScheme.primary,
-                        theme.colorScheme.secondary,
+                        AppColors.primary.withValues(alpha: 0.5),
+                        AppColors.light.withValues(alpha: 0.5),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -47,7 +45,7 @@ class UserGridItem extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onPrimary,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -56,9 +54,7 @@ class UserGridItem extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 user.name,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -66,10 +62,30 @@ class UserGridItem extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 user.email,
-                style: theme.textTheme.bodySmall,
+                style: TextStyle(fontSize: 16, color: Colors.black45),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(width: 1, color: Colors.black45),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 2,
+                  ),
+                  child: Text(
+                    user.address.city,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.secondary,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

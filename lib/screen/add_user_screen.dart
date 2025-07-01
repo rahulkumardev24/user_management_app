@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../helper/color.dart';
 import '../model/user.dart';
 import '../providers/user_providers.dart';
 
@@ -67,25 +68,24 @@ class _AddUserScreenState extends State<AddUserScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add New User'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: _submitForm,
-          ),
+          IconButton(icon: const Icon(Icons.check), onPressed: _submitForm),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
         child: Form(
           key: _formKey,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Card(
-                elevation: 2,
+                elevation: 0,
+                color: AppColors.light.withValues(alpha: 0.3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -143,16 +143,24 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              Spacer(),
               FilledButton(
                 onPressed: _submitForm,
                 style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.secondary,
                   minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text('Add User'),
+                child: const Text(
+                  'Add User',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
               ),
             ],
           ),

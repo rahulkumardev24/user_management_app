@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../model/user.dart';
 import '../service/user_service.dart';
@@ -19,21 +20,32 @@ class UserProvider with ChangeNotifier {
   String? get error => _error;
 
   Future<void> fetchUsers() async {
+    if (_isLoading) return;
+
     _isLoading = true;
+    _error = null;
     notifyListeners();
 
     try {
-      _users = await _userService.fetchUsers();
-      _error = null;
+      final users = await _userService.fetchUsers().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw TimeoutException(
+            'The connection has timed out. Please check your internet connection.',
+          );
+        },
+      );
+      _users = users;
     } catch (e) {
-      _error = 'Failed to fetch users: ${e.toString()}';
+      _error = e.toString().replaceAll('Exception: ', '');
+      rethrow;
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-   addUser(User user) {
+  addUser(User user) {
     _localUsers.add(user);
     notifyListeners();
   }

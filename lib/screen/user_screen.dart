@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:user_management_app/screen/user_details_screen.dart';
+import '../helper/color.dart';
 import '../model/user.dart';
 import '../providers/user_providers.dart';
 import '../widgets/ShimmerLoading.dart';
@@ -42,7 +42,7 @@ class _UsersScreenState extends State<UsersScreen> {
         await userProvider.fetchUsers();
       }
     } catch (e) {
-      // Error will be handled by the provider and shown in the UI
+      print(e);
     }
   }
 
@@ -67,7 +67,7 @@ class _UsersScreenState extends State<UsersScreen> {
     try {
       await Provider.of<UserProvider>(context, listen: false).fetchUsers();
     } catch (e) {
-      // Error will be shown through the provider's error state
+      print(e);
     }
   }
 
@@ -75,41 +75,46 @@ class _UsersScreenState extends State<UsersScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final userProvider = Provider.of<UserProvider>(context);
-    final users = _searchQuery.isEmpty
-        ? userProvider.users
-        : userProvider.searchUsers(_searchQuery);
-
+    final users =
+        _searchQuery.isEmpty
+            ? userProvider.users
+            : userProvider.searchUsers(_searchQuery);
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
+
+      /// app bar
       appBar: AppBar(
-        title: _isSearching
-            ? TextField(
-          controller: _searchController,
-          autofocus: true,
-          decoration: InputDecoration(
-            hintText: 'Search users...',
-            border: InputBorder.none,
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: _toggleSearch,
-            ),
-          ),
-        )
-            : const Text('User Management'),
+        backgroundColor: AppColors.primary,
+        centerTitle: false,
+        title:
+            _isSearching
+                ? TextField(
+                  controller: _searchController,
+                  autofocus: true,
+
+                  decoration: InputDecoration(
+                    hintText: 'Search users...',
+                    border: InputBorder.none,
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: _toggleSearch,
+                    ),
+                  ),
+                )
+                : const Text('User Management'),
         actions: [
           if (!_isSearching)
             IconButton(
               icon: const Icon(Icons.search),
               onPressed: _toggleSearch,
             ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _refreshData,
-          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _refreshData),
         ],
       ),
       body: _buildBody(userProvider, users, theme),
-      floatingActionButton: FloatingActionButton(
+
+      /// add button -> floating action button
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           HapticFeedback.lightImpact();
           Navigator.push(
@@ -117,12 +122,26 @@ class _UsersScreenState extends State<UsersScreen> {
             MaterialPageRoute(builder: (context) => const AddUserScreen()),
           );
         },
-        child: const Icon(Icons.add),
+        backgroundColor: AppColors.secondary,
+        elevation: 1,
+        icon: const Icon(Icons.add, size: 27, color: Colors.black),
+        label: Text(
+          "Add User",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildBody(UserProvider userProvider, List<User> users, ThemeData theme) {
+  Widget _buildBody(
+    UserProvider userProvider,
+    List<User> users,
+    ThemeData theme,
+  ) {
     if (userProvider.isLoading && userProvider.users.isEmpty) {
       return const ShimmerLoading();
     }
@@ -132,11 +151,7 @@ class _UsersScreenState extends State<UsersScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 48,
-              color: theme.colorScheme.error,
-            ),
+            Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
             const SizedBox(height: 16),
             Text(
               userProvider.error!,
@@ -146,10 +161,7 @@ class _UsersScreenState extends State<UsersScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            FilledButton(
-              onPressed: _refreshData,
-              child: const Text('Retry'),
-            ),
+            FilledButton(onPressed: _refreshData, child: const Text('Retry')),
             const SizedBox(height: 8),
             Text(
               'Failed to fetch users',
@@ -219,7 +231,7 @@ class _UsersScreenState extends State<UsersScreen> {
               crossAxisCount: 2,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
-              childAspectRatio: 0.8,
+              childAspectRatio: 1.0,
             ),
             itemCount: users.length,
             itemBuilder: (context, index) {
